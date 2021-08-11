@@ -1,1 +1,8 @@
 # Schedule definitions for thorn CUDA
+
+if (test) {
+  schedule CUDA_Test AT STARTUP
+  {
+    LANG: C
+  } "Check if CUDA can be used"
+}

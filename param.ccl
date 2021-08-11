@@ -1,1 +1,5 @@
 # Parameter definitions for thorn CUDA
+
+CCTK_BOOLEAN test "run simple CUDA kernel to things are working ok"
+{
+} "no"
