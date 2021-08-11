@@ -41,11 +41,11 @@ int CUDA_Test(void) {
   cudaMemcpy(d_out, out, sizeof(float) * N, cudaMemcpyDeviceToHost);
   if(err == cudaSuccess) {
     if(out[0] != a[0] + b[0]) {
-      CCTK_VERROR(CCTK_WARN_ABORT, "CUDA kernel produced incorrrect result %f != %f",
-                  out[0], a[0] + b[0]);
+      CCTK_VERROR("CUDA kernel produced incorrrect result %f != %f", out[0],
+                  a[0] + b[0]);
     }
   } else {
-    CCTK_VERROR(CCTK_WARN_ABORT, "CUDA failed with %s", cudaGetErrorString(err));
+    CCTK_VERROR("CUDA failed with %s", cudaGetErrorString(err));
   }
    
   cudaFree((void**)&d_a);

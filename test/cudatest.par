@@ -1,0 +1,2 @@
+ActiveThorns = CUDA
+CUDA::test = yes
