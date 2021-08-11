@@ -1,0 +1,12 @@
+Cactus Code Thorn CUDA
+Author(s)    : Roland Haas
+Maintainer(s): Cactus team
+Licence      : MIT
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Provide access to the CUDA libraries.
+
+This thorn does not actually provide the library it only offers a convenient
+way to include it in a Cactus configuration.
