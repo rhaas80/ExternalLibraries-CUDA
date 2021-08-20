@@ -33,6 +33,11 @@ if [ -n "$CUDA_DIR" ]; then
 
     # Fortran modules may be located in the lib directory
     CUDA_INC_DIRS="$CUDA_LIB_DIRS $CUDA_INC_DIRS"
+    # pkg-config does not add cudart to the required libs on all systems
+    # eg not on Debian 11
+    if ! [ print %s "${CUDA_LIBS}" | grep -q 'cudart' ] ; then
+      CUDA_LIBS="${CUDA_LIBS} cudart"
+    fi
 else
     echo 'BEGIN ERROR'
     echo 'ERROR in CUDA configuration: Could not find library.'
