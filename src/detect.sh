@@ -20,7 +20,25 @@ set -e                          # Abort on errors
 # assign default values to variables.
 # Try to find the library if build isn't explicitly requested
 if [ -z "${CUDA_INC_DIRS}" -a -z "${CUDA_LIB_DIRS}" -a -z "${CUDA_LIBS}" ]; then
-    find_lib CUDA cuda 1 1.0 "cuda cudart" "cuda.h" "$CUDA_DIR"
+    # ths link library required is actually cudart, never mind what pkg-config
+    # may report
+    find_lib CUDA cuda 1 1.0 "cudart" "cuda.h" "$CUDA_DIR"
+    if [ -z "$CUDA_DIR" ]; then
+        if nvcc --version &>/dev/null; then
+            NVCC_PATH="$(hash -t nvcc)"
+	    find_lib CUDA cuda 1 1.0 "cudart" "cuda.h" "${NVCC_PATH%/*/nvcc}"
+        fi
+    fi
+    if [ -n "$CUDA_DIR" ]; then
+        NEW_CUDA_LIBS=
+        for lib in $CUDA_LIBS; do
+            if [ $lib = cuda ]; then
+	        lib=cudart
+            fi
+            NEW_CUDA_LIBS[${#NEW_CUDA_LIBS[@]}]=$lib
+        done
+        CUDA_LIBS="${NEW_CUDA_LIBS[@]}"
+    fi
 fi
 
 THORN=CUDA
@@ -33,11 +51,6 @@ if [ -n "$CUDA_DIR" ]; then
 
     # Fortran modules may be located in the lib directory
     CUDA_INC_DIRS="$CUDA_LIB_DIRS $CUDA_INC_DIRS"
-    # pkg-config does not add cudart to the required libs on all systems
-    # eg not on Debian 11
-    if ! print %s "${CUDA_LIBS}" | grep -q 'cudart' ; then
-      CUDA_LIBS="${CUDA_LIBS} cudart"
-    fi
 else
     echo 'BEGIN ERROR'
     echo 'ERROR in CUDA configuration: Could not find library.'
