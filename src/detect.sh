@@ -37,7 +37,8 @@ if [ -z "${CUDA_INC_DIRS}" -a -z "${CUDA_LIB_DIRS}" -a -z "${CUDA_LIBS}" ]; then
             fi
             NEW_CUDA_LIBS[${#NEW_CUDA_LIBS[@]}]=$lib
         done
-        CUDA_LIBS="${NEW_CUDA_LIBS[@]}"
+        # nvToolExt for timing calls
+        CUDA_LIBS="nvToolsExt ${NEW_CUDA_LIBS[@]}"
     fi
 fi
 
